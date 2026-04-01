@@ -1,0 +1,896 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Programming Experiments</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+
+        .nav-bar {
+            background: rgba(255,255,255,0.95);
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 30px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .nav-btn {
+            padding: 8px 15px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.95em;
+        }
+
+        .nav-btn:hover {
+            background: #764ba2;
+        }
+
+        .nav-btn.active {
+            background: #764ba2;
+        }
+
+        .experiment-card {
+            background: white;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            overflow: hidden;
+            display: none;
+        }
+
+        .experiment-card.active {
+            display: block;
+        }
+
+        .exp-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .exp-title {
+            font-size: 1.8em;
+            font-weight: bold;
+        }
+
+        .copy-btn {
+            background: rgba(255,255,255,0.25);
+            color: white;
+            border: 2px solid white;
+            padding: 8px 15px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.9em;
+            font-weight: 600;
+        }
+
+        .copy-btn:hover {
+            background: white;
+            color: #764ba2;
+        }
+
+        .copy-btn.copied {
+            background: #4CAF50;
+            border-color: #4CAF50;
+        }
+
+        .exp-content {
+            padding: 20px;
+        }
+
+        pre {
+            background: #f5f5f5;
+            padding: 15px;
+            border-left: 4px solid #667eea;
+            overflow-x: auto;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            line-height: 1.6;
+            color: #333;
+        }
+
+        .all-experiments {
+            background: white;
+            border-radius: 10px;
+            padding: 30px;
+            display: none;
+        }
+
+        .all-experiments.active {
+            display: block;
+        }
+
+        .all-experiments h2 {
+            color: #667eea;
+            margin-bottom: 20px;
+            font-size: 1.5em;
+        }
+
+        .all-content {
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            line-height: 1.6;
+            color: #333;
+            background: #f5f5f5;
+            padding: 20px;
+            border-radius: 5px;
+            max-height: 700px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+
+        .all-copy-btn {
+            background: #f0f0f0;
+            border: 1px solid #ccc;
+            padding: 10px 20px;
+            cursor: pointer;
+            font-size: 0.95em;
+            margin-bottom: 15px;
+        }
+
+        .all-copy-btn:hover {
+            background: #e0e0e0;
+        }
+
+        .all-copy-btn.copied {
+            background: #e0e0e0;
+        }
+
+        .exp-description {
+            font-size: 0.95em;
+            color: #666;
+            margin-bottom: 15px;
+            line-height: 1.5;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 40px;
+            font-size: 0.9em;
+            color: #666;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 1.8em;
+            }
+
+            .exp-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .exp-title {
+                font-size: 1.4em;
+            }
+
+            .nav-bar {
+                flex-direction: column;
+            }
+
+            .nav-btn {
+                width: 100%;
+                text-align: center;
+            }
+
+            pre {
+                font-size: 11px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📚 Programming Experiments</h1>
+            <p>C Programming Concepts & Compiler Design</p>
+        </div>
+
+        <div class="nav-bar">
+            <button class="nav-btn active" onclick="showExperiment('all')">📖 All Experiments</button>
+            <button class="nav-btn" onclick="showExperiment(0)">🔤 EXP 1 - Lexical Analysis</button>
+            <button class="nav-btn" onclick="showExperiment(1)">📊 EXP 2 - Symbol Table</button>
+            <button class="nav-btn" onclick="showExperiment(2)">🔄 Regex to NFA</button>
+            <button class="nav-btn" onclick="showExperiment(3)">Ε Epsilon</button>
+            <button class="nav-btn" onclick="showExperiment(4)">🎯 FIRST Sets</button>
+            <button class="nav-btn" onclick="showExperiment(5)">⚙️ TAC to Assembly</button>
+        </div>
+
+        <!-- All Experiments View -->
+        <div class="all-experiments active" id="all-view">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                <h2>All Experiments (Complete Code)</h2>
+                <button class="all-copy-btn" onclick="copyAllContent()">📋 Copy All</button>
+            </div>
+            <div class="all-content" id="all-content"></div>
+        </div>
+
+        <!-- Individual Experiments -->
+        <div id="experiments-container"></div>
+    </div>
+
+    <div class="footer">
+        <p>💡 Click on experiment buttons to view individual codes • 📋 Use copy buttons to copy code</p>
+    </div>
+
+    <script>
+        const experiments = [
+            {
+                title: "EXP 1: Lexical Analysis",
+                description: "A C program that performs lexical analysis, identifying keywords, identifiers, operators, separators, delimiters, and other tokens in C code.",
+                code: `#include <stdio.h>
+#include <string.h>
+#include <ctype.h>
+int main() {
+char s[200];
+const char *keywords[] = {
+"int","float","char","double","long","short","signed","unsigned",
+"for","while","do","if","else","switch","case","default","break",
+"continue","return","void","static","struct","union","typedef",
+"const","goto","sizeof","volatile","enum","extern","auto","register","main"
+};
+int keywordCount = sizeof(keywords)/sizeof(keywords[0]);
+printf("Enter:");
+while(fgets(s,sizeof(s),stdin)){
+int n=strlen(s);
+for(int i=0;i<n;){
+if(isspace(s[i])){
+i++;
+continue;
+}
+else if(s[i]=='"'){
+char buf[100];
+int j=0;
+buf[j++]=s[i++];
+while(i<n&&s[i]!='"'){
+buf[j++]=s[i++];
+}
+if(i<n&&s[i]=='"'){
+buf[j++]=s[i++];
+}
+
+buf[j]='\0';
+printf("%s is string literal\\n",buf);
+continue;
+}
+else if(s[i]=='%'){
+char buf[10];
+int j=0;
+buf[j++]=s[i++];
+if(i<n&&isalpha(s[i])){
+buf[j++]=s[i++];
+}
+buf[j]='\0';
+printf("%s is format specifier\\n",buf);
+continue;
+}
+else if(isalpha(s[i])){
+char buf[50];
+int j=0;
+while(i<n&&(isalpha(s[i])||isdigit(s[i]))){
+buf[j++]=s[i++];
+}
+buf[j]='\0';
+int isKeyword=0;
+for(int k=0;k<keywordCount;k++){
+if(strcmp(buf,keywords[k])==0){
+printf("%s is keyword\\n",buf);
+isKeyword=1;
+break;
+}
+}
+if(!isKeyword){
+printf("%s is identifier\\n",buf);
+}
+continue;
+}
+else if(isdigit(s[i])){
+char buf[50];
+int j=0;
+while(i<n&&isdigit(s[i])){
+buf[j++]=s[i++];
+}
+buf[j]='\0';
+printf("%s is number\\n",buf);
+continue;
+}
+else if((s[i]=='='&&s[i+1]=='=')||(s[i]=='!'&&s[i+1]=='=')||(s[i]=='>'&&s[i+1]=='=')||(s[i]=='<'&&s[i+1]=='='))
+{
+printf("%c%c is relational operator\\n",s[i],s[i+1]);
+i+=2;
+continue;
+}
+else if ((s[i]=='+'&&s[i+1]=='=')||(s[i]=='-'&&s[i+1]=='=')||
+(s[i]=='*'&&s[i+1]=='=')||(s[i]=='/'&&s[i+1]=='=')){
+printf("%c%c is Assignment operator\\n",s[i],s[i+1]);
+i+=2;
+continue;
+}
+else if((s[i]=='+'&&s[i+1]=='+')||(s[i]=='-'&&s[i+1]=='-')) {
+printf("%c%c is unary operator\\n",s[i],s[i+1]);
+i+=2;
+continue;
+}
+else if(s[i]=='+'||s[i]=='-'||s[i]=='*'||s[i]=='/'||
+s[i]=='=') {
+printf("%c is operator\\n",s[i]);
+i++;
+continue;
+}
+else if((s[i]=='>')||(s[i]=='<')) {
+printf("%c is relational operator\\n",s[i]);
+i++;
+continue;
+}
+else if(s[i]==','||s[i]=='('||s[i]==')'||
+s[i]=='{'||s[i]=='}'||
+s[i]=='['||s[i]==']') {
+printf("%c is separator\\n",s[i]);
+i++;
+continue;
+}
+else if(s[i]==';'||s[i]==':') {
+printf("%c is delimiter\\n",s[i]);
+i++;
+continue;
+}
+i++;
+}
+}
+
+return 0;
+}`
+            },
+            {
+                title: "EXP 2: Symbol Table Generator",
+                description: "A C program that builds and displays a symbol table while performing lexical analysis. It tracks all identifiers found in the code.",
+                code: `#include <stdio.h>
+#include <string.h>
+#include <ctype.h>
+#define MAX_SYMBOLS 100
+struct Symbol {
+char name[50];
+};
+struct Symbol symTable[MAX_SYMBOLS];
+int symCount = 0;
+int exists(char *name) {
+for(int i = 0; i < symCount; i++) {
+if(strcmp(symTable[i].name, name) == 0)
+return 1;
+}
+return 0;
+}
+
+void addSymbol(char *name) {
+if(!exists(name) && symCount < MAX_SYMBOLS) {
+strcpy(symTable[symCount].name, name);
+symCount++;
+}
+}
+
+void displaySymbolTable() {
+printf("\\n--- SYMBOL TABLE ---\\n");
+for(int i = 0; i < symCount; i++) {
+printf("%d : %s\\n", i + 1, symTable[i].name);
+}
+}
+
+int main() {
+char s[200];
+
+const char *keywords[] = {
+"int","float","char","double","long","short","signed","unsigned",
+"for","while","do","if","else","switch","case","default","break",
+"continue","return","void","static","struct","union","typedef",
+"const","goto","sizeof","volatile","enum","extern","auto","register","main"
+};
+
+int keywordCount = sizeof(keywords)/sizeof(keywords[0]);
+
+printf("Enter code (press ENTER twice to stop):\\n");
+
+while(fgets(s, sizeof(s), stdin)) {
+
+if(strcmp(s, "\\n") == 0)
+break;
+
+int n = strlen(s);
+
+for(int i = 0; i < n;) {
+
+if(isspace(s[i])) {
+i++;
+continue;
+}
+
+else if(s[i]=='"') {
+char buf[100];
+int j=0;
+buf[j++]=s[i++];
+
+while(i<n && s[i]!='"') {
+buf[j++]=s[i++];
+}
+
+if(i<n && s[i]=='"') {
+buf[j++]=s[i++];
+}
+
+buf[j]='\0';
+printf("%s is string literal\\n",buf);
+continue;
+}
+
+else if(s[i]=='%') {
+char buf[10];
+int j=0;
+buf[j++]=s[i++];
+
+if(i<n && isalpha(s[i])) {
+buf[j++]=s[i++];
+}
+
+buf[j]='\0';
+printf("%s is format specifier\\n",buf);
+continue;
+}
+
+else if(isalpha(s[i])) {
+char buf[50];
+int j=0;
+
+while(i<n && (isalpha(s[i]) || isdigit(s[i]))) {
+buf[j++]=s[i++];
+}
+
+buf[j]='\0';
+
+int isKeyword=0;
+for(int k=0; k<keywordCount; k++) {
+if(strcmp(buf, keywords[k]) == 0) {
+printf("%s is keyword\\n", buf);
+isKeyword=1;
+break;
+}
+}
+
+if(!isKeyword) {
+printf("%s is identifier\\n", buf);
+addSymbol(buf);
+}
+
+continue;
+}
+
+else if(isdigit(s[i])) {
+char buf[50];
+int j=0;
+
+while(i<n && isdigit(s[i])) {
+buf[j++]=s[i++];
+}
+
+buf[j]='\0';
+printf("%s is number\\n", buf);
+continue;
+}
+
+else if((s[i]=='='&&s[i+1]=='=')||(s[i]=='!'&&s[i+1]=='=')||
+(s[i]=='>'&&s[i+1]=='=')||(s[i]=='<'&&s[i+1]=='=')) {
+printf("%c%c is relational operator\\n", s[i], s[i+1]);
+i+=2;
+continue;
+}
+
+else if((s[i]=='+'&&s[i+1]=='=')||(s[i]=='-'&&s[i+1]=='=')||
+(s[i]=='*'&&s[i+1]=='=')||(s[i]=='/'&&s[i+1]=='=')) {
+printf("%c%c is assignment operator\\n", s[i], s[i+1]);
+i+=2;
+continue;
+}
+
+else if((s[i]=='+'&&s[i+1]=='+')||(s[i]=='-'&&s[i+1]=='-')) {
+printf("%c%c is unary operator\\n", s[i], s[i+1]);
+i+=2;
+continue;
+}
+
+else if(s[i]=='+'||s[i]=='-'||s[i]=='*'||s[i]=='/'||s[i]=='=') {
+printf("%c is operator\\n", s[i]);
+i++;
+continue;
+}
+
+else if(s[i]=='>'||s[i]=='<') {
+printf("%c is relational operator\\n", s[i]);
+i++;
+continue;
+}
+
+else if(s[i]==','||s[i]=='('||s[i]==')'||s[i]=='{'||
+s[i]=='}'||s[i]=='['||s[i]==']') {
+printf("%c is separator\\n", s[i]);
+i++;
+continue;
+}
+
+else if(s[i]==';'||s[i]==':') {
+printf("%c is delimiter\\n", s[i]);
+i++;
+continue;
+}
+
+i++;
+}
+}
+
+displaySymbolTable();
+
+return 0;
+}`
+            },
+            {
+                title: "Regular Expression to NFA",
+                description: "Converts regular expressions to Nondeterministic Finite Automata (NFA). Supports operations like union (*), concatenation, and Kleene star quantification.",
+                code: `#include <stdio.h>
+#include <string.h>
+
+#define MAX 50
+#define EPS 2
+
+int q[MAX][3];
+int state = 1;
+
+void symbol(char ch) {
+    if (ch == 'a')
+        q[state][0] = state + 1;
+    else if (ch == 'b')
+        q[state][1] = state + 1;
+    state++;
+}
+
+void union_ab(char a, char b) {
+    int s = state;
+    q[s][EPS] = (s + 1) * 10 + (s + 3);
+    state++;
+    symbol(a);
+    q[state][EPS] = s + 5;
+    state++;
+    symbol(b);
+    q[state][EPS] = s + 5;
+    state++;
+}
+
+void star(char a) {
+    int s = state;
+    q[s][EPS] = (s + 1) * 10 + (s + 3);
+    state++;
+    symbol(a);
+    q[state][EPS] = (s + 1) * 10 + (state + 1);
+    state++;
+}
+
+int main() {
+    char reg[30];
+    printf("Enter regular expression: ");
+    scanf("%s", reg);
+
+    for (int i = 0; i < strlen(reg); i++) {
+        if (reg[i] == 'a' || reg[i] == 'b') {
+            if (reg[i + 1] == '*') {
+                star(reg[i]);
+                i++;
+            }
+            else if (reg[i + 1] == '|') {
+                union_ab(reg[i], reg[i + 2]);
+                i += 2;
+            }
+            else {
+                symbol(reg[i]);
+            }
+        }
+    }
+
+    printf("\\nTransition Table:\\n");
+    for (int i = 1; i < state; i++) {
+        if (q[i][0])
+            printf("q[%d,a] -> %d\\n", i, q[i][0]);
+        if (q[i][1])
+            printf("q[%d,b] -> %d\\n", i, q[i][1]);
+    }
+
+    return 0;
+}`
+            },
+            {
+                title: "Epsilon Closure",
+                description: "Computes epsilon closures in an automaton using Depth-First Search (DFS). Epsilon transitions are important in NFA processing.",
+                code: `#include <stdio.h>
+#include <string.h>
+#define MAX 50
+#define EPS 2
+
+int epsilon[MAX][MAX];
+int visited[MAX];
+int n;
+
+void dfs(int s) {
+    visited[s] = 1;
+    for (int i = 1; i <= n; i++) {
+        if (epsilon[s][i] == 1 && !visited[i])
+            dfs(i);
+    }
+}
+
+void build_epsilon_matrix() {
+    int i, j;
+    for (i = 0; i < MAX; i++)
+        for (j = 0; j < MAX; j++)
+            epsilon[i][j] = 0;
+}
+
+int main() {
+    char reg[30];
+    printf("Enter regular expression: ");
+    scanf("%s", reg);
+
+    n = 10;
+    build_epsilon_matrix();
+
+    printf("\\nTransition Matrix:\\n");
+    for (int i = 1; i <= n; i++) {
+        for (int j = 1; j <= n; j++)
+            printf("%d ", epsilon[i][j]);
+        printf("\\n");
+    }
+
+    printf("\\nEpsilon Closures:\\n");
+    for (int i = 1; i <= n; i++) {
+        for (int j = 0; j < MAX; j++)
+            visited[j] = 0;
+        dfs(i);
+        printf("ε-closure(%d) = { ", i);
+        for (int j = 1; j <= n; j++)
+            if (visited[j])
+                printf("%d ", j);
+        printf("}\\n");
+    }
+
+    return 0;
+}`
+            },
+            {
+                title: "FIRST Sets Computation",
+                description: "Computes FIRST sets for grammar productions. FIRST sets are crucial in predictive parsing and LL parser construction.",
+                code: `#include <stdio.h>
+#include <string.h>
+#include <ctype.h>
+
+char p[20][20], f[26][20];
+int c[26], n;
+
+void add(char A, char x)
+{
+    int i, k = A - 'A';
+    for(i=0;i<c[k];i++)
+        if(f[k][i]==x) return;
+    f[k][c[k]++] = x;
+}
+
+void first(char A)
+{
+    int i,j,k;
+
+    for(i=0;i<n;i++)
+    {
+        if(p[i][0]==A)
+        {
+            for(j=3;p[i][j]!='\\0';j++)
+            {
+                if(p[i][j]=='|') continue;
+
+                if(!isupper(p[i][j]))
+                    add(A,p[i][j]);
+                else
+                {
+                    first(p[i][j]);
+                    for(k=0;k<c[p[i][j]-'A'];k++)
+                        add(A,f[p[i][j]-'A'][k]);
+                }
+                break;
+            }
+        }
+    }
+}
+
+int main()
+{
+    int i,j;
+
+    printf("Enter number of productions: ");
+    scanf("%d",&n);
+
+    printf("Enter productions:\\n");
+    for(i=0;i<n;i++)
+        scanf("%s",p[i]);
+
+    for(i=0;i<n;i++)
+        first(p[i][0]);
+
+    printf("\\nFIRST sets:\\n");
+
+    for(i=0;i<26;i++)
+        if(c[i])
+        {
+            printf("FIRST(%c) = { ",i+'A');
+            for(j=0;j<c[i];j++)
+                printf("%c ",f[i][j]);
+            printf("}\\n");
+        }
+}`
+            },
+            {
+                title: "Three Address Code to Assembly",
+                description: "Translates Three Address Code (intermediate code) into assembly language instructions. Fundamental for compiler code generation phase.",
+                code: `#include <stdio.h>
+#include <string.h>
+#define MAX 50
+int main()
+{
+    int n, i;
+    char line[MAX];
+    char lhs[10], rhs[20];
+    char arg1[10], arg2[10], op;
+    printf("Enter number of statements: ");
+    scanf("%d", &n);
+    getchar();
+    printf("Enter Three Address Code:\\n");
+    for(i = 0; i < n; i++)
+    {
+        fgets(line, sizeof(line), stdin);
+        line[strcspn(line, "\\n")] = '\\0';
+        sscanf(line, "%[^=]=%s", lhs, rhs);
+        if (sscanf(rhs, "%[^+-*/]%c%s", arg1, &op, arg2) == 3)
+        {
+            printf("\\nLDA R1, %s\\n", arg1);
+            printf("LDA R2, %s\\n", arg2);
+
+            if(op == '+') printf("ADD R2, R1\\n");
+            else if(op == '-') printf("SUB R2, R1\\n");
+            else if(op == '*') printf("MUL R2, R1\\n");
+            else if(op == '/') printf("DIV R2, R1\\n");
+            printf("STA %s, R2\\n", lhs);
+        }
+        else
+        {
+            printf("\\nLDA R1, %s\\n", rhs);
+            printf("STA %s, R1\\n", lhs);
+        }
+    }
+    return 0;
+}`
+            }
+        ];
+
+        function populateExperiments() {
+            const container = document.getElementById('experiments-container');
+            let allText = '';
+            
+            experiments.forEach((exp, index) => {
+                const card = document.createElement('div');
+                card.className = 'experiment-card';
+                card.id = `exp-${index}`;
+                card.innerHTML = `
+                    <div class="exp-header">
+                        <div class="exp-title">${exp.title}</div>
+                        <button class="copy-btn" onclick="copyExperiment(${index}, this)">📋 Copy Code</button>
+                    </div>
+                    <div class="exp-content">
+                        <p class="exp-description">${exp.description}</p>
+                        <pre>${escapeHtml(exp.code)}</pre>
+                    </div>
+                `;
+                container.appendChild(card);
+                allText += `\n\n${'='.repeat(80)}\n${exp.title}\n${'='.repeat(80)}\n\n${exp.code}`;
+            });
+
+            document.getElementById('all-content').textContent = allText;
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        function showExperiment(id) {
+            // Hide all experiment cards
+            document.querySelectorAll('.experiment-card').forEach(card => {
+                card.classList.remove('active');
+            });
+            document.getElementById('all-view').classList.remove('active');
+
+            // Hide all nav buttons active state
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+
+            if (id === 'all') {
+                document.getElementById('all-view').classList.add('active');
+                event.target.classList.add('active');
+            } else {
+                document.getElementById(`exp-${id}`).classList.add('active');
+                event.target.classList.add('active');
+            }
+        }
+
+        function copyExperiment(index, button) {
+            const code = experiments[index].code;
+            navigator.clipboard.writeText(code).then(() => {
+                button.textContent = '✅ Copied!';
+                button.classList.add('copied');
+                setTimeout(() => {
+                    button.textContent = '📋 Copy Code';
+                    button.classList.remove('copied');
+                }, 2000);
+            });
+        }
+
+        function copyAllContent() {
+            const content = document.getElementById('all-content').textContent;
+            navigator.clipboard.writeText(content).then(() => {
+                const button = event.target;
+                button.textContent = '✅ All Copied!';
+                button.classList.add('copied');
+                setTimeout(() => {
+                    button.textContent = '📋 Copy All';
+                    button.classList.remove('copied');
+                }, 2000);
+            });
+        }
+
+        // Initialize
+        populateExperiments();
+    </script>
+</body>
+</html>
