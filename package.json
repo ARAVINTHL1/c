@@ -1,0 +1,17 @@
+{
+  "name": "programming-experiments",
+  "version": "1.0.0",
+  "description": "Programming Experiments - C Programming Concepts & Compiler Design",
+  "main": "index.html",
+  "scripts": {
+    "start": "echo 'Static site ready'"
+  },
+  "keywords": [
+    "programming",
+    "experiments",
+    "compiler-design",
+    "c-programming"
+  ],
+  "author": "ARAVINTHL1",
+  "license": "MIT"
+}
